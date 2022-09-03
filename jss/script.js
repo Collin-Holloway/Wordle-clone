@@ -24,3 +24,5 @@ function initBoard(){
         board.appendChild(row)
     }
 }
+
+initBoard()
