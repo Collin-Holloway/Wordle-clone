@@ -91,4 +91,79 @@ function checkGuess() {
         alert('Word not in list!')
         return
     }
+
+    for (let i=0; i <5; i++){
+        let letterColor = ''
+        let box = row.classList.children[i]
+        let letter = currentGuess[i]
+
+        let letterPosition = rightGuess.indexOf(currentGuess[i])
+
+        if (letterPosition === -1){
+            letterColor = 'grey'
+        } else {
+            if (currentGuess[i] === rightGuess[i]){
+                letterColor = 'green'
+            } else{
+                letterColor = 'yellow'
+            }
+            rightGuess[letterPosition] = '#'
+        }
+
+        let delay = 250 * i 
+        setTimeout(() => {
+            box.style.backgroundColor = letterColor
+            shadeKeyBoard(letter, letterColor)
+        }, delay)
+        }      
+        if (guessString === rightGuessString){
+            alert('You guessed right! Game over!')
+            guessesRemaining = 0
+            return
+        } else {
+            guessesRemaining -= 1;
+            currentGuess = [];
+            nextLetter = 0
+
+            if (guessString === 0){
+                alert(`You've run out of guesses! Game over!`)
+                alert(`The right word was: "${rightGuessString}"`)
+            }
+
+        }
+    
+
 }
+
+function shadeKeyBoard(letter, color) {
+    for (const elem of document.getElementsByClassName('keyboard-button')){
+        if (elem.textContent === letter){
+            let oldColor = elem.style.backgroundColor
+            if (oldColor === 'green'){
+                return
+            }
+
+            if (oldColor === 'yellow' && color !== 'green'){
+                return
+            }
+
+            elem.style.backgroundColor = color
+            break
+        }
+    }
+}
+
+document.getElementById('keyboad-cont').addEventListener('click', (e) => {
+    const target = e.target
+
+    if (!target.classList.contains('keyboard-button')){
+        return 
+    }
+    let key = target.textContent
+
+    if(key === 'Del'){
+        key = 'Backspace'
+    }
+
+    document.dispatchEvent(new KeyboardEvent('keyup', {'key':key}))
+})
