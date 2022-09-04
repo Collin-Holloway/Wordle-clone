@@ -26,24 +26,25 @@ function initBoard(){
 
 initBoard()
 
-document.addEventListener('keyup', (e) => {
+document.addEventListener("keyup", (e) => {
+
     if (guessesRemaining === 0) {
         return
     }
 
     let pressedKey = String(e.key)
-    if (pressedKey === 'Backspace' && nextLetter !== 0){
-    deleteLetter()
-    return
+    if (pressedKey === "Backspace" && nextLetter !== 0) {
+        deleteLetter()
+        return
     }
-    
-    if (pressedKey === 'Enter'){
+
+    if (pressedKey === "Enter") {
         checkGuess()
         return
     }
 
     let found = pressedKey.match(/[a-z]/gi)
-    if (!found || found.length > 1){
+    if (!found || found.length > 1) {
         return
     } else {
         insertLetter(pressedKey)
@@ -56,10 +57,10 @@ function insertLetter (pressedKey) {
     }
     pressedKey = pressedKey.toLowerCase()
 
-    let row = document.getElementsByClassName('letter-row')[6 - guessesRemaining]
+    let row = document.getElementsByClassName("letter-row")[6 - guessesRemaining]
     let box = row.children[nextLetter]
     box.textContent = pressedKey
-    box.classList.add('filled-box')
+    box.classList.add("filled-box")
     currentGuess.push(pressedKey)
     nextLetter += 1
 }
@@ -73,66 +74,72 @@ function deleteLetter(){
     nextLetter -= 1
 }
 
-function checkGuess() {
-    let row = document.getElementsByClassName('letter-row')[6 - guessesRemaining]
+function checkGuess () {
+    let row = document.getElementsByClassName("letter-row")[6 - guessesRemaining]
     let guessString = ''
-    let rightGuessString = Array.from(rightGuessString)
+    let rightGuess = Array.from(rightGuessString)
 
     for (const val of currentGuess) {
         guessString += val
     }
+
+    if (guessString.length != 5) {
+        alert("Not enough letters!")
+        return
+    }
+
+    if (!WORDS.includes(guessString)) {
+        alert("Word not in list!")
+        return
+    }
+
     
-    if (guessString.length != 5){
-        alert('Not enought letters!')
-        return
-    }
-
-    if (!WORDS.includes(guessString)){
-        alert('Word not in list!')
-        return
-    }
-
-    for (let i=0; i <5; i++){
+    for (let i = 0; i < 5; i++) {
         let letterColor = ''
-        let box = row.classList.children[i]
+        let box = row.children[i]
         let letter = currentGuess[i]
-
+        
         let letterPosition = rightGuess.indexOf(currentGuess[i])
-
-        if (letterPosition === -1){
+        // is letter in the correct guess
+        if (letterPosition === -1) {
             letterColor = 'grey'
         } else {
-            if (currentGuess[i] === rightGuess[i]){
+            // now, letter is definitely in word
+            // if letter index and right guess index are the same
+            // letter is in the right position 
+            if (currentGuess[i] === rightGuess[i]) {
+                // shade green 
                 letterColor = 'green'
-            } else{
+            } else {
+                // shade box yellow
                 letterColor = 'yellow'
             }
-            rightGuess[letterPosition] = '#'
+
+            rightGuess[letterPosition] = "#"
         }
 
-        let delay = 250 * i 
-        setTimeout(() => {
+        let delay = 250 * i
+        setTimeout(()=> {
+            //shade box
             box.style.backgroundColor = letterColor
             shadeKeyBoard(letter, letterColor)
         }, delay)
-        }      
-        if (guessString === rightGuessString){
-            alert('You guessed right! Game over!')
-            guessesRemaining = 0
-            return
-        } else {
-            guessesRemaining -= 1;
-            currentGuess = [];
-            nextLetter = 0
+    }
 
-            if (guessString === 0){
-                alert(`You've run out of guesses! Game over!`)
-                alert(`The right word was: "${rightGuessString}"`)
-            }
+    if (guessString === rightGuessString) {
+        alert("You guessed right! Game over!")
+        guessesRemaining = 0
+        return
+    } else {
+        guessesRemaining -= 1;
+        currentGuess = [];
+        nextLetter = 0;
 
+        if (guessesRemaining === 0) {
+            alert("You've run out of guesses! Game over!")
+            alert(`The right word was: "${rightGuessString}"`)
         }
-    
-
+    }
 }
 
 function shadeKeyBoard(letter, color) {
