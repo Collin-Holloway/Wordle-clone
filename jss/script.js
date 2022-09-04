@@ -63,3 +63,32 @@ function insertLetter (pressedKey) {
     currentGuess.push(pressedKey)
     nextLetter += 1
 }
+
+function deleteLetter(){
+    let row = document.getElementsByClassName('letter-row')[6 - guessesRemaining]
+    let box = row.children[nextLetter - 1]
+    box.textContent = ''
+    box.classList.remove('filled-box')
+    currentGuess.pop()
+    nextLetter -= 1
+}
+
+function checkGuess() {
+    let row = document.getElementsByClassName('letter-row')[6 - guessesRemaining]
+    let guessString = ''
+    let rightGuessString = Array.from(rightGuessString)
+
+    for (const val of currentGuess) {
+        guessString += val
+    }
+    
+    if (guessString.length != 5){
+        alert('Not enought letters!')
+        return
+    }
+
+    if (!WORDS.includes(guessString)){
+        alert('Word not in list!')
+        return
+    }
+}
